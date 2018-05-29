@@ -12,14 +12,15 @@ const client = new pg.Client(process.env.DATABASE_URL);
 client.connect();
 client.on('error', err => console.error(err));
 
-app.get('/', (req, res) => res.send('Testing 1, 2, 3, 4, 5, eat'));
+app.get('/', (req, res) => res.send('Testing 1, 2, 3, eat'));
 // TO DO: ensure that this is linked to routes and pages
 // TO DO: write out different ways to search the API using different titles, ingredients, and
+
 app.get('/api/json/recipes/ingredients', (req, res) => {
   let url = 'https://www.themealdb.com/api/json/v1/1/filter.php'
   let query = '';
   // look into this more not sure it is correct.
-  if(req.query.strMeal) query += `${req.query.strMeal}`;
+  if(req.query.ingredients) query += `${req.query.ingredients}`;
   superagent.get(url)
     .query({'i': query})
     .then(response => res.send(response.body.meals));
@@ -39,7 +40,7 @@ app.get('/api/json/recipes/categories', (req, res) => {
   let url = 'https://www.themealdb.com/api/json/v1/1/filter.php'
   let query = '';
   // look into this more not sure it is correct.
-  if(req.query.strMeal) query += `${req.query.strMeal}`;
+  if(req.query.categories) query += `${req.query.categories}`;
   superagent.get(url)
     .query({'c': query})
     .then(response => res.send(response.body.meals));
@@ -49,7 +50,7 @@ app.get('/api/json/recipes/area', (req, res) => {
   let url = 'https://www.themealdb.com/api/json/v1/1/filter.php'
   let query = '';
   // look into this more not sure it is correct.
-  if(req.query.strMeal) query += `${req.query.strMeal}`;
+  if(req.query.area) query += `${req.query.area}`;
   superagent.get(url)
     .query({'a': query})
     .then(response => res.send(response.body.meals));
