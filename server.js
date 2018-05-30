@@ -99,6 +99,9 @@ app.get('/api/json/recipe/:id', (req, res) => {
       console.log('someone wants some meals!!!');
       console.log(meal);
 
+
+      // here is where we put in the code to load the database
+
       res.send(meal);
     })
     .catch(console.error);
