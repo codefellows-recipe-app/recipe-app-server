@@ -61,10 +61,10 @@ app.get('/api/json/recipe/:id', (req, res) => {
   let query = req.params.id;
   superagent.get(url)
     .query({'i': query})
+    .then(console.log(res))
     .then(response => res.send(response.body.meals));
 
 });
-
 
 ///// DATABASE LOADER /////
 ///////////////////////////
