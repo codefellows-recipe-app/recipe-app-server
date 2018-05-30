@@ -12,6 +12,8 @@ const client = new pg.Client(process.env.DATABASE_URL);
 client.connect();
 client.on('error', err => console.error(err));
 
+app.use(cors());
+
 app.get('/', (req, res) => res.send('Testing 1, 2, 3, eat'));
 // TO DO: ensure that this is linked to routes and pages
 // TO DO: write out different ways to search the API using different titles, ingredients, and
