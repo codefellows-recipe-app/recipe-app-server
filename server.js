@@ -135,6 +135,10 @@ app.get('/api/json/recipe/:id', (req, res) => {
 
 });
 
+loadDB();
+
+app.listen(PORT, () => console.log(`Listening on port: ${PORT}`));
+
 ///// DATABASE LOADER /////
 ///////////////////////////
 function loadDB() {
@@ -142,12 +146,13 @@ function loadDB() {
   client.query(`
     CREATE TABLE IF NOT EXISTS
     meals_table (
-      meal_id SERIAL PRIMARY KEY,
+      meal_id VARCHAR (255) PRIMARY KEY,
       name VARCHAR (225) NOT NULL,
       category VARCHAR (225) NOT NULL,
       area VARCHAR (225) NOT NULL
     );`
   )
+    .then(console.log)
     .catch(console.error);
 
   client.query(`
@@ -158,6 +163,7 @@ function loadDB() {
       ingredients_id VARCHAR (225),
       measure VARCHAR (225)
   );`)
+    .then(console.log)
     .catch(console.error);
 
   client.query(`
@@ -169,9 +175,8 @@ function loadDB() {
       body TEXT NOT NULL,
       duration INT
   );`)
+    .then(console.log)
     .catch(console.error);
 }
 
-loadDB();
 
-app.listen(PORT, () => console.log(`Listening on port: ${PORT}`));
