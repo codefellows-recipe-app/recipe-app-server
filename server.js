@@ -16,9 +16,9 @@ app.get('/', (req, res) => res.send('Testing 1, 2, 3, eat'));
 // TO DO: ensure that this is linked to routes and pages
 // TO DO: write out different ways to search the API using different titles, ingredients, and
 
-app.get('/api/json/recipes/ingredients', (req, res) => {
+app.get('/api/json/recipes/ingredients:ingredients', (req, res) => {
   let url = 'https://www.themealdb.com/api/json/v1/1/filter.php'
-  let query = '';
+  let query = req.params.ingredients;
   // look into this more not sure it is correct.
   if(req.query.ingredients) query += `${req.query.ingredients}`;
   superagent.get(url)
@@ -26,9 +26,9 @@ app.get('/api/json/recipes/ingredients', (req, res) => {
     .then(response => res.send(response.body.meals));
 });
 
-app.get('/api/json/recipes/name', (req, res) => {
+app.get('/api/json/recipes/name/:name', (req, res) => {
   let url = 'https://www.themealdb.com/api/json/v1/1/search.php'
-  let query = '';
+  let query = req.params.name;
   // look into this more not sure it is correct.
   if(req.query.name) query += `${req.query.name}`;
   superagent.get(url)
@@ -36,9 +36,9 @@ app.get('/api/json/recipes/name', (req, res) => {
     .then(response => res.send(response.body.meals));
 });
 
-app.get('/api/json/recipes/categories', (req, res) => {
-  let url = 'https://www.themealdb.com/api/json/v1/1/filter.php'
-  let query = '';
+app.get('/api/json/recipes/categories/:category', (req, res) => {
+  let url = `https://www.themealdb.com/api/json/v1/1/filter.php`
+  let query = req.params.category;
   // look into this more not sure it is correct.
   if(req.query.categories) query += `${req.query.categories}`;
   superagent.get(url)
@@ -46,14 +46,23 @@ app.get('/api/json/recipes/categories', (req, res) => {
     .then(response => res.send(response.body.meals));
 });
 
-app.get('/api/json/recipes/area', (req, res) => {
-  let url = 'https://www.themealdb.com/api/json/v1/1/filter.php'
-  let query = '';
+app.get('/api/json/recipes/area/:area', (req, res) => {
+  let url = `https://www.themealdb.com/api/json/v1/1/filter.php`
+  let query = req.params.area;
   // look into this more not sure it is correct.
   if(req.query.area) query += `${req.query.area}`;
   superagent.get(url)
     .query({'a': query})
     .then(response => res.send(response.body.meals));
+});
+
+app.get('/api/json/recipe/:id', (req, res) => {
+  let url = `https://www.themealdb.com/api/json/v1/1/lookup.php`
+  let query = req.params.id;
+  superagent.get(url)
+    .query({'i': query})
+    .then(response => res.send(response.body.meals));
+
 });
 
 
