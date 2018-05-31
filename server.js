@@ -58,6 +58,51 @@ app.get('/api/json/recipes/area/:area', (req, res) => {
     .then(response => res.send(response.body.meals));
 });
 
+app.get('/api/json/recipe/random', (req, res) => {
+  let url = `https://www.themealdb.com/api/json/v1/1/random.php`;
+  let query = [req.params.id]
+
+  superagent.get(url)
+    .query({ 'i': query })
+    .then(response => {
+      let rawMealData = response.body.meals[0];
+      let meal = {};
+
+      meal.id = rawMealData.idMeal;
+      meal.name = rawMealData.strMeal;
+      meal.category = rawMealData.strCategory;
+      meal.area = rawMealData.strArea;
+      meal.thumb = rawMealData.strMealThumb;
+      meal.tag = rawMealData.tags;
+      meal.youTube = rawMealData.strYoutube
+      meal.ingredients = [];
+
+      for (let i = 1; i <= 20; i++) {
+        if (rawMealData['strIngredient' + i] !== '' && rawMealData['strIngredient' + i] !== null) {
+          meal.ingredients.push({ name: rawMealData['strIngredient' + i], measure: rawMealData['strMeasure' + i] });
+        }
+      }
+
+      meal.instructions = rawMealData.strInstructions
+        .replace(/\n/g, '')
+        .replace(/\r/g, '')
+        .split('.')
+        .filter(instruction => instruction !== '')
+        .map(instruction => instruction[0] === ' ' ? instruction.substring(1) : instruction)
+        .map((instruction, i) => {
+          return {
+            sequence: i + 1,
+            category: 'cook',
+            body: instruction,
+            duration: 0
+          }
+        });
+
+      res.send(meal);
+    })
+    .catch(console.error);
+});
+
 // route to get a single recipe
 app.get('/api/json/recipe/:id', (req, res) => {
   let url = `https://www.themealdb.com/api/json/v1/1/lookup.php`
@@ -130,27 +175,34 @@ app.get('/api/json/recipe/:id', (req, res) => {
     .catch(console.error);
 });
 
-app.get('/api/json/recipe/delete/:id', (req, res) => {
+app.delete('/api/json/recipe/delete/:id', (req, res) => {
   res.send('1,2,3')
   let SQL = `DELETE FROM meals_table WHERE meal_id=$1;`;
-  let values = req.params.id;
-  client.query( SQL, values)
-    .then(deleteTwo())
-
+  let values = [req.params.id];
+  client.query( SQL, values,
+    function(err) {
+      if (err) console.error(err)
+      deleteTwo();
+    }
+  )
 
   function deleteTwo () {
     let SQL = `DELETE FROM ingredients_table WHERE meal_id=$1;`;
-    let values = req.params.id;
-    client.query( SQL, values)
-      .then(deleteThree())
-  }
+    let values = [req.params.id];
+    client.query( SQL, values,
+      function(err) {
+        if (err) console.error(err)
+        deleteThree();
+      }
+    )
 
-  function deleteThree () {
-    let SQL = `DELETE FROM instructions_table WHERE meal_id=$1;`;
-    let values = req.params.id;
-    client.query( SQL, values)
-      .then(() => res.send('Delete complete'))
-      .catch(console.error);
+    function deleteThree () {
+      let SQL = `DELETE FROM instructions_table WHERE meal_id=$1;`;
+      let values = [req.params.id];
+      client.query( SQL, values)
+        .then(() => res.send('Delete complete'))
+        .catch(console.error);
+    }
   }
 });
 
