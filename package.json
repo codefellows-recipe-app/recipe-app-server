@@ -1,0 +1,26 @@
+{
+  "name": "recipe-app-server",
+  "version": "1.0.0",
+  "description": "recipe app server",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/codefellows-recipe-app/recipe-app-server.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/codefellows-recipe-app/recipe-app-server/issues"
+  },
+  "homepage": "https://github.com/codefellows-recipe-app/recipe-app-server#readme",
+  "dependencies": {
+    "cors": "^2.8.4",
+    "express": "^4.16.3",
+    "pg": "^7.4.3",
+    "superagent": "^3.8.3"
+  }
+}
