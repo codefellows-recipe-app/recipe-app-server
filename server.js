@@ -15,8 +15,6 @@ client.on('error', err => console.error(err));
 app.use(cors());
 
 app.get('/', (req, res) => res.send('Testing 1, 2, 3, eat'));
-// TO DO: ensure that this is linked to routes and pages
-// TO DO: write out different ways to search the API using different titles, ingredients, and
 
 app.get('/api/json/recipes/ingredients/:ingredients', (req, res) => {
   let url = 'https://www.themealdb.com/api/json/v1/1/filter.php'
@@ -31,18 +29,16 @@ app.get('/api/json/recipes/ingredients/:ingredients', (req, res) => {
 app.get('/api/json/recipes/name/:name', (req, res) => {
   let url = 'https://www.themealdb.com/api/json/v1/1/search.php'
   let query = [req.params.name];
-  // look into this more not sure it is correct.
   if (req.query.name) query += `${req.query.name}`;
   superagent.get(url)
     .query({ 's': query })
     .then(response => res.send(response.body.meals));
 });
 
-app.get('/api/json/recipes/categories/:category', (req, res) => {
+app.get('/api/json/recipes/category/:category', (req, res) => {
   let url = `https://www.themealdb.com/api/json/v1/1/filter.php`
   let query = [req.params.category];
-  // look into this more not sure it is correct.
-  if (req.query.categories) query += `${req.query.categories}`;
+  if (req.query.category) query += `${req.query.category}`;
   superagent.get(url)
     .query({ 'c': query })
     .then(response => res.send(response.body.meals));
@@ -51,7 +47,6 @@ app.get('/api/json/recipes/categories/:category', (req, res) => {
 app.get('/api/json/recipes/area/:area', (req, res) => {
   let url = `https://www.themealdb.com/api/json/v1/1/filter.php`
   let query = [req.params.area];
-  // look into this more not sure it is correct.
   if (req.query.area) query += `${req.query.area}`;
   superagent.get(url)
     .query({ 'a': query })
@@ -245,5 +240,3 @@ function loadDB() {
   )
     .catch(console.error);
 }
-
-
