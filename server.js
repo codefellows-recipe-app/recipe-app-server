@@ -58,6 +58,51 @@ app.get('/api/json/recipes/area/:area', (req, res) => {
     .then(response => res.send(response.body.meals));
 });
 
+app.get('/api/json/recipe/random', (req, res) => {
+  let url = `https://www.themealdb.com/api/json/v1/1/random.php`;
+  let query = [req.params.id]
+
+  superagent.get(url)
+    .query({ 'i': query })
+    .then(response => {
+      let rawMealData = response.body.meals[0];
+      let meal = {};
+
+      meal.id = rawMealData.idMeal;
+      meal.name = rawMealData.strMeal;
+      meal.category = rawMealData.strCategory;
+      meal.area = rawMealData.strArea;
+      meal.thumb = rawMealData.strMealThumb;
+      meal.tag = rawMealData.tags;
+      meal.youTube = rawMealData.strYoutube
+      meal.ingredients = [];
+
+      for (let i = 1; i <= 20; i++) {
+        if (rawMealData['strIngredient' + i] !== '' && rawMealData['strIngredient' + i] !== null) {
+          meal.ingredients.push({ name: rawMealData['strIngredient' + i], measure: rawMealData['strMeasure' + i] });
+        }
+      }
+
+      meal.instructions = rawMealData.strInstructions
+        .replace(/\n/g, '')
+        .replace(/\r/g, '')
+        .split('.')
+        .filter(instruction => instruction !== '')
+        .map(instruction => instruction[0] === ' ' ? instruction.substring(1) : instruction)
+        .map((instruction, i) => {
+          return {
+            sequence: i + 1,
+            category: 'cook',
+            body: instruction,
+            duration: 0
+          }
+        });
+
+      res.send(meal);
+    })
+    .catch(console.error);
+});
+
 // route to get a single recipe
 app.get('/api/json/recipe/:id', (req, res) => {
   let url = `https://www.themealdb.com/api/json/v1/1/lookup.php`
