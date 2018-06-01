@@ -19,7 +19,6 @@ app.get('/', (req, res) => res.send('Testing 1, 2, 3, eat'));
 app.get('/api/json/recipes/ingredients/:ingredients', (req, res) => {
   let url = 'https://www.themealdb.com/api/json/v1/1/filter.php'
   let query = [req.params.ingredients];
-  // look into this more not sure it is correct.
   if (req.query.ingredients) query += `${req.query.ingredients}`;
   superagent.get(url)
     .query({ 'i': query })
