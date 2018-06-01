@@ -34,10 +34,10 @@ app.get('/api/json/recipes/name/:name', (req, res) => {
     .then(response => res.send(response.body.meals));
 });
 
-app.get('/api/json/recipes/categories/:category', (req, res) => {
+app.get('/api/json/recipes/category/:category', (req, res) => {
   let url = `https://www.themealdb.com/api/json/v1/1/filter.php`
   let query = [req.params.category];
-  if (req.query.categories) query += `${req.query.categories}`;
+  if (req.query.category) query += `${req.query.category}`;
   superagent.get(url)
     .query({ 'c': query })
     .then(response => res.send(response.body.meals));
@@ -239,5 +239,3 @@ function loadDB() {
   )
     .catch(console.error);
 }
-
-
